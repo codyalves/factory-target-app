@@ -1,0 +1,25 @@
+{
+  "name": "Juniper Ridge Coffee Roasters",
+  "tagline": "Small-batch coffee, roasted in the foothills.",
+  "about": "Juniper Ridge is a fictional demo company. We roast single-origin coffee in small batches every Tuesday and Friday, and run one café beside the roastery.",
+  "contact": {
+    "email": "hello@juniperridge.example",
+    "phone": "(555) 010-2048",
+    "address": "214 Canyon Road, Foothill, UT"
+  },
+  "hours": [
+    { "days": "Monday to Friday", "open": "07:00", "close": "16:00" },
+    { "days": "Saturday", "open": "08:00", "close": "14:00" },
+    { "days": "Sunday", "open": null, "close": null }
+  ],
+  "faqs": [
+    {
+      "question": "Do you ship?",
+      "answer": "Yes, within the United States. Orders placed by noon on a roast day ship the same day."
+    },
+    {
+      "question": "Do you offer decaf?",
+      "answer": "Yes, a Swiss Water Process decaf from Colombia."
+    }
+  ]
+}
