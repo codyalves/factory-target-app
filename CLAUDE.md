@@ -12,9 +12,10 @@ pnpm lint        # Biome
 pnpm typecheck   # tsc --noEmit
 pnpm test        # Vitest
 pnpm build       # next build
+pnpm test:e2e    # Playwright, against the built app (run pnpm build first)
 ```
 
-All four must pass; the factory runs them as quality gates.
+All five must pass; the factory runs them as quality gates.
 
 ## Layout
 
@@ -22,6 +23,9 @@ All four must pass; the factory runs them as quality gates.
   must not state anything about the company that is not in here.
 - `lib/`: plain TypeScript, unit-tested (`*.test.ts` next to the code).
 - `app/`: Next.js App Router pages and components.
+- `tests/e2e/`: Playwright end-to-end tests (`*.spec.ts`).
+- `tests/regressions/`: regression tests filed by the factory's tester, each
+  with its issue. Protected: never edit one to make it pass; fix the app.
 
 ## Conventions
 
