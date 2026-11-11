@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { company, describeHours, formatTime } from './company';
+import { company, describeHours, formatTime, phoneHref } from './company';
 
 describe('formatTime', () => {
   it('formats morning, noon, afternoon and midnight', () => {
@@ -7,6 +7,19 @@ describe('formatTime', () => {
     expect(formatTime('12:30')).toBe('12:30 PM');
     expect(formatTime('16:05')).toBe('4:05 PM');
     expect(formatTime('00:00')).toBe('12:00 AM');
+  });
+});
+
+describe('phoneHref', () => {
+  it('AC-1: builds a tel: link', () => {
+    expect(phoneHref(company.contact.phone).startsWith('tel:')).toBe(true);
+  });
+  it('AC-2: keeps only the digits', () => {
+    expect(phoneHref('(555) 010-2048')).toBe('tel:5550102048');
+  });
+  it('AC-3: leaves the source phone text unchanged', () => {
+    phoneHref(company.contact.phone);
+    expect(company.contact.phone).toBe('(555) 010-2048');
   });
 });
 
