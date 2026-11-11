@@ -1,5 +1,5 @@
 import { company } from './company';
-import { type Fact, companyFacts } from './facts';
+import { companyFacts, type Fact } from './facts';
 
 export interface Answer {
   readonly text: string;
