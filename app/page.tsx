@@ -1,4 +1,5 @@
 import { company, describeHours, phoneHref } from '@/lib/company';
+import { Chat } from './components/chat';
 
 export default function Home() {
   return (
@@ -33,6 +34,8 @@ export default function Home() {
           ))}
         </dl>
       </section>
+
+      <Chat />
 
       <section>
         <h2>Contact</h2>
