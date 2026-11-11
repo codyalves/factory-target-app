@@ -27,6 +27,11 @@ export function formatTime(time: string): string {
   return `${hour}:${String(m).padStart(2, '0')} ${suffix}`;
 }
 
+/** "(555) 010-2048" -> "tel:5550102048". */
+export function phoneHref(phone: string): string {
+  return `tel:${phone.replace(/\D/g, '')}`;
+}
+
 /** "Monday to Friday: 7:00 AM to 4:00 PM", or "Sunday: closed". */
 export function describeHours(hours: OpeningHours): string {
   return hours.open && hours.close

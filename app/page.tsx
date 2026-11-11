@@ -1,4 +1,4 @@
-import { company, describeHours } from '@/lib/company';
+import { company, describeHours, phoneHref } from '@/lib/company';
 
 export default function Home() {
   return (
@@ -37,7 +37,8 @@ export default function Home() {
       <section>
         <h2>Contact</h2>
         <p>
-          <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a> · {company.contact.phone}
+          <a href={`mailto:${company.contact.email}`}>{company.contact.email}</a> ·{' '}
+          <a href={phoneHref(company.contact.phone)}>{company.contact.phone}</a>
         </p>
       </section>
     </>
