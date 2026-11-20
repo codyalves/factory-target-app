@@ -19,16 +19,16 @@ export function Chat() {
   return (
     <section>
       <h2>Ask us a question</h2>
-      <ul aria-live="polite">
+      <ul className="chat-log" aria-live="polite">
         {messages.map((m, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: append-only list
-          <li key={i} className={m.role}>
+          <li key={i} className={`chat-bubble ${m.role}`}>
             <p>{m.text}</p>
-            {m.source ? <p>From: {m.source}</p> : null}
+            {m.source ? <p className="chat-source">From: {m.source}</p> : null}
           </li>
         ))}
       </ul>
-      <form onSubmit={submit}>
+      <form className="chat-form" onSubmit={submit}>
         <label>
           Your question
           <input ref={inputRef} type="text" value={input} onChange={(e) => setInput(e.target.value)} />

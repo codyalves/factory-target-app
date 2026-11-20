@@ -277,7 +277,61 @@ button:disabled {
   border-top: 1px solid var(--rule);
 }
 
-/* Desktop: content on the left, the facts people come for in a column beside it. */
+/* ---------------------------------------------------------------- chat */
+
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.chat-bubble {
+  max-width: 85%;
+  padding: var(--space-1) var(--space-2);
+  border-radius: calc(var(--radius) * 3);
+  overflow-wrap: anywhere;
+}
+
+.chat-bubble p {
+  margin: 0;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: var(--juniper);
+  color: var(--on-juniper);
+}
+
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.chat-bubble .chat-source {
+  margin-top: 0.25rem;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.chat-form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+.chat-form label {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+/* Desktop: content on the left,the facts people come for in a column beside it. */
 @media (min-width: 52rem) {
   .layout {
     grid-template-columns: minmax(0, 1fr) 20rem;
