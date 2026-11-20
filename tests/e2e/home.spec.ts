@@ -39,6 +39,20 @@ test('AC-5: asking "Do you ship?" shows the shipping answer', async ({ page }) =
   await expect(page.getByText('Yes, within the United States', { exact: false }).first()).toBeVisible();
 });
 
+test('AC-3: no serious accessibility violations after a question is answered', async ({ page }) => {
+  await page.goto('/');
+  await page.getByLabel('Your question').fill('Do you ship?');
+  await page.getByRole('button', { name: 'Ask' }).click();
+  await expect(page.getByText('Yes, within the United States', { exact: false }).first()).toBeVisible();
+  await expect(page.getByLabel('Your question')).toBeFocused();
+
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze();
+  const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+  expect(serious.map((v) => v.id)).toEqual([]);
+});
+
 test('the home page has no serious accessibility violations', async ({ page }) => {
   await page.goto('/');
 

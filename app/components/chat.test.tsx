@@ -50,4 +50,17 @@ describe('Chat', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Ask' }));
     expect(screen.getByText('From: Do you ship?')).toBeTruthy();
   });
+
+  it('AC-1: the conversation is a polite live region', () => {
+    const { container } = render(<Chat />);
+    expect(container.querySelector('[aria-live="polite"]')).toBeTruthy();
+  });
+
+  it('AC-2: focus stays in the text box after a question is sent', () => {
+    render(<Chat />);
+    const box = screen.getByLabelText('Your question');
+    type('Do you ship?');
+    fireEvent.click(screen.getByRole('button', { name: 'Ask' }));
+    expect(document.activeElement).toBe(box);
+  });
 });
