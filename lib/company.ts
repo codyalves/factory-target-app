@@ -38,3 +38,8 @@ export function describeHours(hours: OpeningHours): string {
     ? `${hours.days}: ${formatTime(hours.open)} to ${formatTime(hours.close)}`
     : `${hours.days}: closed`;
 }
+
+/** "7:00 AM – 4:00 PM", or "Closed": the time half of describeHours, for a table cell. */
+export function hoursRange(hours: OpeningHours): string {
+  return hours.open && hours.close ? `${formatTime(hours.open)} – ${formatTime(hours.close)}` : 'Closed';
+}

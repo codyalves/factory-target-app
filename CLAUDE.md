@@ -19,6 +19,8 @@ All five must pass; the factory runs them as quality gates.
 
 ## Layout
 
+- `DESIGN.md`: how the site looks. UI changes follow it and use the tokens in
+  `app/globals.css`; no new colors, fonts or decorative elements.
 - `content/company.json`: the company's information. The site and chatbot
   must not state anything about the company that is not in here.
 - `lib/`: plain TypeScript, unit-tested (`*.test.ts` next to the code).

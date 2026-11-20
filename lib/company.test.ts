@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { company, describeHours, formatTime, phoneHref } from './company';
+import { company, describeHours, formatTime, hoursRange, phoneHref } from './company';
 
 describe('formatTime', () => {
   it('formats morning, noon, afternoon and midnight', () => {
@@ -29,6 +29,13 @@ describe('describeHours', () => {
       'Saturday: 8:00 AM to 2:00 PM',
     );
     expect(describeHours({ days: 'Sunday', open: null, close: null })).toBe('Sunday: closed');
+  });
+});
+
+describe('hoursRange', () => {
+  it('gives the opening and closing time, or Closed', () => {
+    expect(hoursRange({ days: 'Saturday', open: '08:00', close: '14:00' })).toBe('8:00 AM – 2:00 PM');
+    expect(hoursRange({ days: 'Sunday', open: null, close: null })).toBe('Closed');
   });
 });
 
