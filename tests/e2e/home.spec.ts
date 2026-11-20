@@ -32,6 +32,13 @@ test('AC-3: the phone link text is exactly as in company.json', async ({ page })
   await expect(page.getByRole('link', { name: company.contact.phone })).toHaveText(company.contact.phone);
 });
 
+test('AC-5: asking "Do you ship?" shows the shipping answer', async ({ page }) => {
+  await page.goto('/');
+  await page.getByLabel('Your question').fill('Do you ship?');
+  await page.getByRole('button', { name: 'Ask' }).click();
+  await expect(page.getByText('Yes, within the United States', { exact: false }).first()).toBeVisible();
+});
+
 test('the home page has no serious accessibility violations', async ({ page }) => {
   await page.goto('/');
 
