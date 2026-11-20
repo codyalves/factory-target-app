@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="footer">
       <p>
-        © {currentYear()} {company.name}. {company.contact.address}
+        © {currentYear()} {company.name}
       </p>
     </footer>
   );

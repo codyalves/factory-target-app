@@ -1,46 +1,298 @@
+/*
+ * Design tokens and base styles. DESIGN.md explains them; use these variables
+ * rather than new colors, sizes or fonts.
+ */
 :root {
-  --bg: #fbf8f3;
-  --fg: #2b2118;
-  --muted: #6f6257;
-  --accent: #7a4b2a;
+  --paper: #e9ece4;
+  --surface: #dce2d3;
+  --ink: #1c2826;
+  --muted: #55625e;
+  --rule: #c3ccbb;
+  --juniper: #3d5f7a;
+  --on-juniper: #ffffff;
+  --ridge-near: #2f4a3f;
+  --ridge-far: #a9b8a0;
+
+  --font: var(--font-archivo), system-ui, sans-serif;
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.375rem;
+  --step-2: 1.75rem;
+  --display: clamp(2.75rem, 8.5vw, 6.25rem);
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --radius: 6px;
+  --measure: 38rem;
+  --page: 64rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1c1713;
-    --fg: #f1e9e0;
-    --muted: #b3a597;
-    --accent: #d39a6a;
+    --paper: #141c1b;
+    --surface: #1f2a28;
+    --ink: #e6ebe2;
+    --muted: #a2aea8;
+    --rule: #33403d;
+    --juniper: #9dbad3;
+    --on-juniper: #12212c;
+    --ridge-near: #4f6a5a;
+    --ridge-far: #26332f;
   }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font: 16px/1.6 system-ui, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
 }
 
-main,
-.footer {
-  max-width: 44rem;
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.15;
+  font-stretch: 112%;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--step-1);
+  margin-bottom: var(--space-2);
+}
+
+p {
+  margin: 0 0 var(--space-2);
 }
 
 a {
-  color: var(--accent);
+  color: var(--juniper);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
 }
 
-.tagline,
-.footer {
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--juniper);
+  outline-offset: 2px;
+}
+
+input,
+button {
+  font: inherit;
+}
+
+input[type='text'] {
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+}
+
+button {
+  padding: 0.6rem 1.1rem;
+  font-weight: 650;
+  color: var(--on-juniper);
+  background: var(--juniper);
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------------- page */
+
+.hero {
+  padding-top: var(--space-5);
+}
+
+/* Same width and gutter as .layout, so the name lines up with the content below. */
+.hero-inner {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0 var(--space-2);
+}
+
+.hero h1 {
+  font-size: var(--display);
+  font-stretch: 125%;
+  font-weight: 850;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  max-width: 12ch;
+}
+
+.tagline {
+  margin: var(--space-3) 0 0;
+  font-size: var(--step-1);
+  font-stretch: 85%;
   color: var(--muted);
 }
 
-dt {
-  font-weight: 600;
+.ridge {
+  display: block;
+  width: 100%;
+  height: clamp(4rem, 11vw, 8.5rem);
+  margin-top: var(--space-4);
 }
 
-dd {
-  margin: 0 0 1rem;
+.ridge .far {
+  fill: var(--ridge-far);
+}
+
+.ridge .near {
+  fill: var(--ridge-near);
+}
+
+.layout {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-2) var(--space-5);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.layout > main > * + * {
+  margin-top: var(--space-5);
+}
+
+.prose {
+  max-width: var(--measure);
+}
+
+.facts {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.panel {
+  padding: var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+.panel h2 {
+  font-size: var(--step-0);
+  margin-bottom: var(--space-1);
+}
+
+.hours {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.hours th,
+.hours td {
+  padding: var(--space-1) 0;
+  border-top: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.hours tr:first-child th,
+.hours tr:first-child td {
+  border-top: 0;
+}
+
+.hours th {
+  font-weight: 600;
+  text-align: left;
+  padding-right: var(--space-2);
+}
+
+.hours td {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.hours .closed {
+  color: var(--muted);
+}
+
+.contact address {
+  font-style: normal;
+}
+
+.contact p {
+  margin: 0 0 var(--space-1);
+}
+
+.faq {
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.faq div {
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.faq div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq dt {
+  font-weight: 650;
+}
+
+.faq dd {
+  margin: var(--space-1) 0 0;
+}
+
+.footer {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0 var(--space-2) var(--space-4);
+  color: var(--muted);
+  font-size: var(--step--1);
+}
+
+.footer p {
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+}
+
+/* Desktop: content on the left, the facts people come for in a column beside it. */
+@media (min-width: 52rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    column-gap: var(--space-5);
+  }
+
+  .layout > main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .facts {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: var(--space-3);
+  }
 }
