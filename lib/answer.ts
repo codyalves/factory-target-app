@@ -8,7 +8,7 @@ export interface Answer {
 }
 
 const STOPWORDS = new Set(
-  'a an the do does did you your yours are is am be i me my we our us to of on at in for it can could would will what whats when how who where which have has get with and or there any about'.split(
+  'a an the do does did you your yours are is am be i me my we our us to of on at in for it can could would will what whats when how who where which anything have has get with and or there any about'.split(
     ' ',
   ),
 );
@@ -24,7 +24,14 @@ function words(s: string): string[] {
 }
 
 function stem(w: string): string {
-  return w.length > 4 && w.endsWith('s') ? w.slice(0, -1) : w;
+  let r = w;
+  if (r.length > 4 && r.endsWith('s') && !r.endsWith('ss')) r = r.slice(0, -1);
+  else if (r.length > 5 && r.endsWith('ing')) r = r.slice(0, -3);
+  else if (r.length > 4 && r.endsWith('ed')) r = r.slice(0, -2);
+  else return r;
+  // "shipp" -> "ship"
+  if (r.length > 3 && r.at(-1) === r.at(-2) && !/[aeioulsz]/.test(r.at(-1) as string)) r = r.slice(0, -1);
+  return r;
 }
 
 function contentWords(s: string): Set<string> {
@@ -83,7 +90,7 @@ export function answerQuestion(question: string): Answer {
 
   if (has('phone', 'call', 'telephone')) return reply(factById('contact-phone'));
   if (has('email', 'mail')) return reply(factById('contact-email'));
-  if (has('address', 'location', 'located', 'find')) return reply(factById('contact-address'));
+  if (has('where', 'address', 'location', 'located', 'find')) return reply(factById('contact-address'));
   if (has('open', 'opening', 'hours', 'close', 'closing', 'closed')) return reply(hoursFacts);
 
   return {

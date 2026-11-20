@@ -44,6 +44,29 @@ describe('answerQuestion', () => {
       expect(answerQuestion(q)).toEqual({ text: IDK, citations: [] });
     }
   });
+  it('AC-1: shipping questions get the shipping FAQ', () => {
+    for (const q of ['Do you offer shipping?', 'Is anything shipped abroad?']) {
+      expect(answerQuestion(q)).toEqual({ text: fact('faq-1'), citations: ['faq-1'] });
+    }
+  });
+  it('AC-2: word forms match their stem', () => {
+    for (const q of ['shipping', 'shipped', 'ships']) {
+      expect(answerQuestion(q).citations).toEqual(['faq-1']);
+    }
+  });
+  it('AC-3: where questions get the address', () => {
+    for (const q of ['Where are you?', 'Where are you located?', 'What is your address?']) {
+      expect(answerQuestion(q)).toEqual({
+        text: fact('contact-address'),
+        citations: ['contact-address'],
+      });
+    }
+  });
+  it('AC-4: unknown questions still get the fallback', () => {
+    for (const q of ['Do you sell tea?', 'Who is your CEO?']) {
+      expect(answerQuestion(q)).toEqual({ text: IDK, citations: [] });
+    }
+  });
   it('AC-8: replies are made only of the cited facts text', () => {
     for (const q of ['Do you ship?', 'When are you open?', 'How do I email you?', 'Sunday?']) {
       const a = answerQuestion(q);
