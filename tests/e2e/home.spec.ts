@@ -123,7 +123,7 @@ test('AC-4: the From line is smaller than the reply and muted', async ({ page })
       Number.parseFloat(getComputedStyle(s).fontSize),
     ];
   });
-  expect(sizes[1]).toBeLessThan(sizes[0]);
+  expect(sizes[1] as number).toBeLessThan(sizes[0] as number);
   await expect(src).toHaveCSS('color', await tokenColor(page, '--muted'));
 });
 
