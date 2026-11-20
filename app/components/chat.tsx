@@ -1,17 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ask, type ChatMessage, canAsk } from '@/lib/chat';
 
 export function Chat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!canAsk(input)) return;
     setMessages(ask(messages, input));
     setInput('');
+    inputRef.current?.focus();
   }
 
   return (
@@ -29,7 +31,7 @@ export function Chat() {
       <form onSubmit={submit}>
         <label>
           Your question
-          <input type="text" value={input} onChange={(e) => setInput(e.target.value)} />
+          <input ref={inputRef} type="text" value={input} onChange={(e) => setInput(e.target.value)} />
         </label>{' '}
         <button type="submit" disabled={!canAsk(input)}>
           Ask
