@@ -93,6 +93,10 @@ export function answerQuestion(question: string): Answer {
   if (has('where', 'address', 'location', 'located', 'find')) return reply(factById('contact-address'));
   if (has('open', 'opening', 'hours', 'close', 'closing', 'closed')) return reply(hoursFacts);
 
+  return dontKnow();
+}
+
+export function dontKnow(): Answer {
   return {
     text: `I don't know that from our information. You can reach us at ${company.contact.email}.`,
     citations: [],
