@@ -67,6 +67,10 @@ describe('answerQuestion', () => {
       expect(answerQuestion(q)).toEqual({ text: IDK, citations: [] });
     }
   });
+  it('AC-6: "How much is a latte?" answers with the Latte fact and cites only it', () => {
+    expect(fact('menu-4')).toContain('Latte');
+    expect(answerQuestion('How much is a latte?')).toEqual({ text: fact('menu-4'), citations: ['menu-4'] });
+  });
   it('AC-8: replies are made only of the cited facts text', () => {
     for (const q of ['Do you ship?', 'When are you open?', 'How do I email you?', 'Sunday?']) {
       const a = answerQuestion(q);

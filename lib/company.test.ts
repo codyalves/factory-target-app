@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { company, describeHours, formatTime, hoursRange, phoneHref } from './company';
+import { company, describeHours, formatPrice, formatTime, hoursRange, phoneHref } from './company';
 
 describe('formatTime', () => {
   it('formats morning, noon, afternoon and midnight', () => {
@@ -7,6 +7,23 @@ describe('formatTime', () => {
     expect(formatTime('12:30')).toBe('12:30 PM');
     expect(formatTime('16:05')).toBe('4:05 PM');
     expect(formatTime('00:00')).toBe('12:00 AM');
+  });
+});
+
+describe('menu', () => {
+  it('AC-1: company.json has the menu sections and items in order', () => {
+    expect(company.menu.map((s) => [s.section, s.items.map((i) => i.name)])).toEqual([
+      ['Espresso bar', ['Espresso', 'Cortado', 'Cappuccino', 'Latte', 'Mocha', 'Juniper honey latte']],
+      ['Brewed', ['Drip coffee', 'Pour-over', 'Cold brew']],
+      ['Bakery', ['Butter croissant', 'Morning bun', 'Breakfast burrito']],
+      ['Beans to take home', ['Single origin, 12 oz', 'Decaf, 12 oz', 'House blend, 5 lb']],
+    ]);
+    expect(company.menu[0]?.items[5]?.seasonal).toBe(true);
+  });
+  it('AC-3: prices have a dollar sign and two decimals', () => {
+    expect(formatPrice(4)).toBe('$4.00');
+    expect(formatPrice(72)).toBe('$72.00');
+    expect(formatPrice(3.25)).toBe('$3.25');
   });
 });
 

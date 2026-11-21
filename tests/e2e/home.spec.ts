@@ -230,6 +230,50 @@ for (const scheme of ['light', 'dark'] as const) {
   });
 }
 
+test('AC-2: the Menu section lists sections, items, descriptions and prices', async ({ page }) => {
+  await page.goto('/');
+  const menu = page.locator('section#menu');
+  await expect(menu.getByRole('heading', { level: 2, name: 'Menu' })).toBeVisible();
+  await expect(menu.getByRole('heading', { level: 3 })).toHaveText([
+    'Espresso bar',
+    'Brewed',
+    'Bakery',
+    'Beans to take home',
+  ]);
+  await expect(menu.locator('li')).toHaveCount(15);
+  await expect(menu.locator('li', { hasText: 'Cortado' })).toContainText(
+    'Equal parts espresso and steamed milk.',
+  );
+});
+
+test('AC-3: menu prices show two decimals', async ({ page }) => {
+  await page.goto('/');
+  const menu = page.locator('section#menu');
+  await expect(menu.locator('li', { hasText: 'Cortado' })).toContainText('$4.00');
+  await expect(menu.locator('li', { hasText: 'House blend, 5 lb' })).toContainText('$72.00');
+});
+
+test('AC-4: seasonal items show a Seasonal label', async ({ page }) => {
+  await page.goto('/');
+  const menu = page.locator('section#menu');
+  await expect(menu.getByText('Seasonal', { exact: true })).toHaveCount(1);
+  await expect(menu.locator('li', { hasText: 'Juniper honey latte' })).toContainText('Seasonal');
+});
+
+for (const scheme of ['light', 'dark'] as const) {
+  test(`AC-7: no serious accessibility violations on the home page with the menu (${scheme})`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/');
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+    const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+    expect(serious.map((v) => v.id)).toEqual([]);
+  });
+}
+
 test('the home page has no serious accessibility violations', async ({ page }) => {
   await page.goto('/');
 

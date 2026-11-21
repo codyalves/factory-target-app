@@ -241,6 +241,51 @@ button:disabled {
   margin: 0 0 var(--space-1);
 }
 
+.menu-section h3 {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: var(--step-0);
+  font-stretch: 112%;
+  font-weight: 700;
+}
+
+.menu-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: var(--measure);
+}
+
+.menu-items li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 var(--space-2);
+  padding: var(--space-1) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.menu-items p {
+  margin: 0;
+}
+
+.menu-name {
+  font-weight: 650;
+}
+
+.menu-seasonal {
+  margin-left: var(--space-1);
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.menu-price {
+  font-variant-numeric: tabular-nums;
+}
+
+.menu-desc {
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
 .faq {
   margin: 0;
   max-width: var(--measure);

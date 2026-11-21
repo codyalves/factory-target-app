@@ -7,12 +7,25 @@ export interface OpeningHours {
   readonly close: string | null;
 }
 
+export interface MenuItem {
+  readonly name: string;
+  readonly price: number;
+  readonly description: string;
+  readonly seasonal?: boolean;
+}
+
+export interface MenuSection {
+  readonly section: string;
+  readonly items: readonly MenuItem[];
+}
+
 export interface Company {
   readonly name: string;
   readonly tagline: string;
   readonly about: string;
   readonly contact: { readonly email: string; readonly phone: string; readonly address: string };
   readonly hours: readonly OpeningHours[];
+  readonly menu: readonly MenuSection[];
   readonly faqs: readonly { readonly question: string; readonly answer: string }[];
 }
 
@@ -37,6 +50,16 @@ export function describeHours(hours: OpeningHours): string {
   return hours.open && hours.close
     ? `${hours.days}: ${formatTime(hours.open)} to ${formatTime(hours.close)}`
     : `${hours.days}: closed`;
+}
+
+/** 4 -> "$4.00". */
+export function formatPrice(price: number): string {
+  return `$${price.toFixed(2)}`;
+}
+
+/** Every menu item in menu order. */
+export function menuItems(): MenuItem[] {
+  return company.menu.flatMap((s) => [...s.items]);
 }
 
 /** "7:00 AM – 4:00 PM", or "Closed": the time half of describeHours, for a table cell. */
