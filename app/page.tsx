@@ -1,5 +1,5 @@
 import { company, hoursRange, phoneHref } from '@/lib/company';
-import { Chat } from './components/chat';
+import { ChatLauncher } from './components/chat-launcher';
 import { Ridge } from './components/ridge';
 
 export default function Home() {
@@ -61,10 +61,9 @@ export default function Home() {
               ))}
             </dl>
           </section>
-
-          <Chat />
         </main>
       </div>
+      <ChatLauncher />
     </>
   );
 }
