@@ -28,6 +28,28 @@ export function sourceLabel(citations: string[]): string | undefined {
   return labels.length ? labels.join(', ') : undefined;
 }
 
+/** Ask the server; on any failure answer locally with answerQuestion. */
+export async function fetchAnswer(question: string, doFetch: typeof fetch = fetch): Promise<Answer> {
+  try {
+    const res = await doFetch('/api/chat', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ question }),
+    });
+    if (!res.ok) return answerQuestion(question);
+    const data = (await res.json()) as { text?: unknown; citations?: unknown };
+    if (typeof data.text !== 'string' || !Array.isArray(data.citations)) return answerQuestion(question);
+    return { text: data.text, citations: data.citations.filter((c): c is string => typeof c === 'string') };
+  } catch {
+    return answerQuestion(question);
+  }
+}
+
+export function reply(history: readonly ChatMessage[], a: Answer): ChatMessage[] {
+  const source = sourceLabel(a.citations);
+  return [...history, { role: 'bot', text: a.text, ...(source ? { source } : {}) }];
+}
+
 export function ask(
   history: readonly ChatMessage[],
   input: string,
