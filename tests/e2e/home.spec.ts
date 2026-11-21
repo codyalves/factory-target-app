@@ -32,8 +32,13 @@ test('AC-3: the phone link text is exactly as in company.json', async ({ page })
   await expect(page.getByRole('link', { name: company.contact.phone })).toHaveText(company.contact.phone);
 });
 
+async function openChat(page: Page) {
+  await page.getByRole('button', { name: 'Ask us a question' }).click();
+}
+
 test('AC-4: asking "Do you ship?" shows the shipping answer', async ({ page }) => {
   await page.goto('/');
+  await openChat(page);
   await page.getByLabel('Your question').fill('Do you ship?');
   await page.getByRole('button', { name: 'Ask' }).click();
   await expect(page.getByText('Yes, within the United States', { exact: false }).first()).toBeVisible();
@@ -41,6 +46,7 @@ test('AC-4: asking "Do you ship?" shows the shipping answer', async ({ page }) =
 
 test('AC-3: no serious accessibility violations after a question is answered', async ({ page }) => {
   await page.goto('/');
+  await openChat(page);
   await page.getByLabel('Your question').fill('Do you ship?');
   await page.getByRole('button', { name: 'Ask' }).click();
   await expect(page.getByText('Yes, within the United States', { exact: false }).first()).toBeVisible();
@@ -55,6 +61,7 @@ test('AC-3: no serious accessibility violations after a question is answered', a
 
 async function askShip(page: Page) {
   await page.goto('/');
+  await openChat(page);
   await page.getByLabel('Your question').fill('Do you ship?');
   await page.getByRole('button', { name: 'Ask' }).click();
   await expect(page.locator('.chat-bubble.bot').first()).toBeVisible();
@@ -141,6 +148,79 @@ test('AC-5: input and button share a row, and no horizontal scroll at 375px', as
   );
   expect(overflow).toBe(false);
 });
+
+test('AC-1: a round button fixed bottom-right opens the chat in a panel', async ({ page }) => {
+  await page.goto('/');
+  const launcher = page.getByRole('button', { name: 'Ask us a question' });
+  await expect(launcher).toHaveCSS('position', 'fixed');
+  await expect(launcher).toHaveCSS('border-top-left-radius', '50%');
+  const vp = page.viewportSize()!;
+  const box = (await launcher.boundingBox())!;
+  expect(vp.width - (box.x + box.width)).toBeLessThan(40);
+  expect(vp.height - (box.y + box.height)).toBeLessThan(40);
+  await expect(page.getByRole('dialog', { name: 'Chat' })).toBeHidden();
+  await launcher.click();
+  await expect(page.getByRole('dialog', { name: 'Chat' })).toBeVisible();
+});
+
+test('AC-2: the chat does not appear inline on the page', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByLabel('Your question')).toBeHidden();
+  await expect(page.locator('main').getByRole('heading', { name: 'Ask us a question' })).toHaveCount(0);
+});
+
+test('AC-3: opening the panel focuses the question text box', async ({ page }) => {
+  await page.goto('/');
+  await openChat(page);
+  await expect(page.getByLabel('Your question')).toBeFocused();
+});
+
+test('AC-4: the × button and Escape close the panel and return focus to the round button', async ({ page }) => {
+  await page.goto('/');
+  const launcher = page.getByRole('button', { name: 'Ask us a question' });
+  const panel = page.getByRole('dialog', { name: 'Chat' });
+  await openChat(page);
+  await page.getByRole('button', { name: 'Close chat' }).click();
+  await expect(panel).toBeHidden();
+  await expect(launcher).toBeFocused();
+  await openChat(page);
+  await page.keyboard.press('Escape');
+  await expect(panel).toBeHidden();
+  await expect(launcher).toBeFocused();
+});
+
+test('AC-5: the panel fills a 375px screen', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('/');
+  await openChat(page);
+  const box = (await page.getByRole('dialog', { name: 'Chat' }).boundingBox())!;
+  expect(box.x).toBeLessThan(1);
+  expect(Math.abs(box.width - 375)).toBeLessThan(1);
+});
+
+test('AC-5: from 52rem the panel is at most 24rem wide, bottom-right', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.goto('/');
+  await openChat(page);
+  const box = (await page.getByRole('dialog', { name: 'Chat' }).boundingBox())!;
+  expect(box.width).toBeLessThanOrEqual(385);
+  expect(1024 - (box.x + box.width)).toBeLessThan(40);
+  expect(800 - (box.y + box.height)).toBeLessThan(40);
+});
+
+for (const scheme of ['light', 'dark'] as const) {
+  test(`AC-6: no serious accessibility violations with the panel open (${scheme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/');
+    await openChat(page);
+    await expect(page.getByLabel('Your question')).toBeFocused();
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+    const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+    expect(serious.map((v) => v.id)).toEqual([]);
+  });
+}
 
 test('the home page has no serious accessibility violations', async ({ page }) => {
   await page.goto('/');
