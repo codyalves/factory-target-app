@@ -241,7 +241,9 @@ test('AC-2: the Menu section lists sections, items, descriptions and prices', as
     'Beans to take home',
   ]);
   await expect(menu.locator('li')).toHaveCount(15);
-  await expect(menu.locator('li', { hasText: 'Cortado' })).toContainText('Equal parts espresso and steamed milk.');
+  await expect(menu.locator('li', { hasText: 'Cortado' })).toContainText(
+    'Equal parts espresso and steamed milk.',
+  );
 });
 
 test('AC-3: menu prices show two decimals', async ({ page }) => {
