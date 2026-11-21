@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 
 // Read directly: Playwright loads tests as plain ES modules, without Next's JSON handling.
 const company = JSON.parse(readFileSync(new URL('../../content/company.json', import.meta.url), 'utf8')) as {
@@ -32,6 +32,12 @@ test('AC-3: the phone link text is exactly as in company.json', async ({ page })
   await expect(page.getByRole('link', { name: company.contact.phone })).toHaveText(company.contact.phone);
 });
 
+async function boxOf(locator: Locator) {
+  const b = await locator.boundingBox();
+  if (!b) throw new Error('element has no bounding box');
+  return b;
+}
+
 async function openChat(page: Page) {
   await page.getByRole('button', { name: 'Ask us a question' }).click();
 }
@@ -40,7 +46,7 @@ test('AC-4: asking "Do you ship?" shows the shipping answer', async ({ page }) =
   await page.goto('/');
   await openChat(page);
   await page.getByLabel('Your question').fill('Do you ship?');
-  await page.getByRole('button', { name: 'Ask' }).click();
+  await page.getByRole('button', { name: 'Ask', exact: true }).click();
   await expect(page.getByText('Yes, within the United States', { exact: false }).first()).toBeVisible();
 });
 
@@ -48,7 +54,7 @@ test('AC-3: no serious accessibility violations after a question is answered', a
   await page.goto('/');
   await openChat(page);
   await page.getByLabel('Your question').fill('Do you ship?');
-  await page.getByRole('button', { name: 'Ask' }).click();
+  await page.getByRole('button', { name: 'Ask', exact: true }).click();
   await expect(page.getByText('Yes, within the United States', { exact: false }).first()).toBeVisible();
   await expect(page.getByLabel('Your question')).toBeFocused();
 
@@ -63,7 +69,7 @@ async function askShip(page: Page) {
   await page.goto('/');
   await openChat(page);
   await page.getByLabel('Your question').fill('Do you ship?');
-  await page.getByRole('button', { name: 'Ask' }).click();
+  await page.getByRole('button', { name: 'Ask', exact: true }).click();
   await expect(page.locator('.chat-bubble.bot').first()).toBeVisible();
 }
 
@@ -137,9 +143,9 @@ test('AC-4: the From line is smaller than the reply and muted', async ({ page })
 test('AC-5: input and button share a row, and no horizontal scroll at 375px', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await askShip(page);
-  const input = (await page.getByLabel('Your question').boundingBox())!;
-  const btn = (await page.getByRole('button', { name: 'Ask' }).boundingBox())!;
-  const form = (await page.locator('.chat-form').boundingBox())!;
+  const input = await boxOf(page.getByLabel('Your question'));
+  const btn = await boxOf(page.getByRole('button', { name: 'Ask', exact: true }));
+  const form = await boxOf(page.locator('.chat-form'));
   expect(Math.abs(input.y + input.height - (btn.y + btn.height))).toBeLessThan(2);
   expect(input.x + input.width).toBeLessThanOrEqual(btn.x);
   expect(form.x + form.width - (btn.x + btn.width)).toBeLessThan(2);
@@ -154,8 +160,8 @@ test('AC-1: a round button fixed bottom-right opens the chat in a panel', async 
   const launcher = page.getByRole('button', { name: 'Ask us a question' });
   await expect(launcher).toHaveCSS('position', 'fixed');
   await expect(launcher).toHaveCSS('border-top-left-radius', '50%');
-  const vp = page.viewportSize()!;
-  const box = (await launcher.boundingBox())!;
+  const vp = page.viewportSize() ?? { width: 0, height: 0 };
+  const box = await boxOf(launcher);
   expect(vp.width - (box.x + box.width)).toBeLessThan(40);
   expect(vp.height - (box.y + box.height)).toBeLessThan(40);
   await expect(page.getByRole('dialog', { name: 'Chat' })).toBeHidden();
@@ -175,7 +181,9 @@ test('AC-3: opening the panel focuses the question text box', async ({ page }) =
   await expect(page.getByLabel('Your question')).toBeFocused();
 });
 
-test('AC-4: the × button and Escape close the panel and return focus to the round button', async ({ page }) => {
+test('AC-4: the × button and Escape close the panel and return focus to the round button', async ({
+  page,
+}) => {
   await page.goto('/');
   const launcher = page.getByRole('button', { name: 'Ask us a question' });
   const panel = page.getByRole('dialog', { name: 'Chat' });
@@ -193,7 +201,7 @@ test('AC-5: the panel fills a 375px screen', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/');
   await openChat(page);
-  const box = (await page.getByRole('dialog', { name: 'Chat' }).boundingBox())!;
+  const box = await boxOf(page.getByRole('dialog', { name: 'Chat' }));
   expect(box.x).toBeLessThan(1);
   expect(Math.abs(box.width - 375)).toBeLessThan(1);
 });
@@ -202,7 +210,7 @@ test('AC-5: from 52rem the panel is at most 24rem wide, bottom-right', async ({ 
   await page.setViewportSize({ width: 1024, height: 800 });
   await page.goto('/');
   await openChat(page);
-  const box = (await page.getByRole('dialog', { name: 'Chat' }).boundingBox())!;
+  const box = await boxOf(page.getByRole('dialog', { name: 'Chat' }));
   expect(box.width).toBeLessThanOrEqual(385);
   expect(1024 - (box.x + box.width)).toBeLessThan(40);
   expect(800 - (box.y + box.height)).toBeLessThan(40);
