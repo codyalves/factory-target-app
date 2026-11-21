@@ -22,6 +22,7 @@ export function sourceLabel(citations: string[]): string | undefined {
     if (fact?.question) label = fact.question;
     else if (id.startsWith('hours-')) label = 'Opening hours';
     else if (id.startsWith('contact-')) label = 'Contact';
+    else if (id.startsWith('menu-')) label = 'Menu';
     else if (id === 'about') label = 'About';
     if (label && !labels.includes(label)) labels.push(label);
   }

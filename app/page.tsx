@@ -1,4 +1,4 @@
-import { company, hoursRange, phoneHref } from '@/lib/company';
+import { company, formatPrice, hoursRange, phoneHref } from '@/lib/company';
 import { ChatLauncher } from './components/chat-launcher';
 import { Ridge } from './components/ridge';
 
@@ -48,6 +48,27 @@ export default function Home() {
           <section className="prose">
             <h2>About</h2>
             <p>{company.about}</p>
+          </section>
+
+          <section id="menu" aria-labelledby="menu-heading">
+            <h2 id="menu-heading">Menu</h2>
+            {company.menu.map((s) => (
+              <div className="menu-section" key={s.section}>
+                <h3>{s.section}</h3>
+                <ul className="menu-items">
+                  {s.items.map((m) => (
+                    <li key={m.name}>
+                      <p className="menu-name">
+                        <span>{m.name}</span>
+                        {m.seasonal ? <span className="menu-seasonal">Seasonal</span> : null}
+                      </p>
+                      <p className="menu-price">{formatPrice(m.price)}</p>
+                      <p className="menu-desc">{m.description}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </section>
 
           <section>

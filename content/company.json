@@ -12,6 +12,43 @@
     { "days": "Saturday", "open": "08:00", "close": "14:00" },
     { "days": "Sunday", "open": null, "close": null }
   ],
+  "menu": [
+    {
+      "section": "Espresso bar",
+      "items": [
+        { "name": "Espresso", "price": 3.25, "description": "A double shot of the current single origin." },
+        { "name": "Cortado", "price": 4.0, "description": "Equal parts espresso and steamed milk." },
+        { "name": "Cappuccino", "price": 4.75, "description": "Espresso with a deep layer of foam." },
+        { "name": "Latte", "price": 5.25, "description": "Whole milk, or oat or almond for $0.75 more." },
+        { "name": "Mocha", "price": 5.75, "description": "Espresso, dark chocolate and steamed milk." },
+        { "name": "Juniper honey latte", "price": 6.0, "description": "House juniper syrup and Utah honey.", "seasonal": true }
+      ]
+    },
+    {
+      "section": "Brewed",
+      "items": [
+        { "name": "Drip coffee", "price": 3.0, "description": "Free refills while you stay." },
+        { "name": "Pour-over", "price": 5.0, "description": "Any single origin on the shelf, brewed to order." },
+        { "name": "Cold brew", "price": 4.75, "description": "Steeped for 18 hours." }
+      ]
+    },
+    {
+      "section": "Bakery",
+      "items": [
+        { "name": "Butter croissant", "price": 3.75, "description": "Baked each morning." },
+        { "name": "Morning bun", "price": 4.25, "description": "Orange zest and cinnamon sugar." },
+        { "name": "Breakfast burrito", "price": 8.5, "description": "Egg, potato, cheddar and green chile." }
+      ]
+    },
+    {
+      "section": "Beans to take home",
+      "items": [
+        { "name": "Single origin, 12 oz", "price": 18.0, "description": "Roasted on Tuesday or Friday." },
+        { "name": "Decaf, 12 oz", "price": 17.0, "description": "Swiss Water Process, from Colombia." },
+        { "name": "House blend, 5 lb", "price": 72.0, "description": "For offices and big households." }
+      ]
+    }
+  ],
   "faqs": [
     {
       "question": "Do you ship?",

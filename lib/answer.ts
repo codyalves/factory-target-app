@@ -1,4 +1,4 @@
-import { company } from './company';
+import { company, menuItems } from './company';
 import { companyFacts, type Fact } from './facts';
 
 export interface Answer {
@@ -78,6 +78,15 @@ export function answerQuestion(question: string): Answer {
     }
   }
   if (best.length) return reply(best);
+
+  // Menu: items whose every name word is in the question; the most specific wins.
+  const menuHits = menuItems()
+    .map((m, i) => ({ id: `menu-${i + 1}`, n: [...contentWords(m.name)] }))
+    .filter((m) => m.n.length > 0 && m.n.every((w) => content.has(w)));
+  if (menuHits.length) {
+    const top = Math.max(...menuHits.map((m) => m.n.length));
+    return reply(menuHits.filter((m) => m.n.length === top).flatMap((m) => factById(m.id)));
+  }
 
   const asked = DAYS.map((d, i) => (ws.has(d) ? i : -1)).filter((i) => i >= 0);
   if (asked.length) {
